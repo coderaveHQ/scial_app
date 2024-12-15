@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:scial_app/src/app.dart';
+import 'package:scial_app/core/utils/env.dart';
+
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await SystemChrome.setPreferredOrientations([ DeviceOrientation.portraitUp ]);
 
-  runApp(const MainApp());
+  await loadEnv();
+
+  await initializeSupabase();
+
+  runApp(const App());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+Future<void> loadEnv() async {
+  await dotenv.load();
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+Future<void> initializeSupabase() async {
+  await Supabase.initialize(
+    url: Env.supabaseUrl,
+    anonKey: Env.supabaseAnonKey,
+    authOptions: const FlutterAuthClientOptions(detectSessionInUri: false)
+  );
 }
