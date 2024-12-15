@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:scial_app/src/app.dart';
 import 'package:scial_app/core/utils/env.dart';
+import 'package:scial_app/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +17,7 @@ Future<void> main() async {
   await loadEnv();
 
   await initializeSupabase();
+  await initializeFirebase();
 
   runApp(const App());
 }
@@ -29,4 +32,8 @@ Future<void> initializeSupabase() async {
     anonKey: Env.supabaseAnonKey,
     authOptions: const FlutterAuthClientOptions(detectSessionInUri: false)
   );
+}
+
+Future<void> initializeFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
