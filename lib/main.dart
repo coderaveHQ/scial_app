@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -19,7 +20,11 @@ Future<void> main() async {
   await initializeSupabase();
   await initializeFirebase();
 
-  runApp(const App());
+  runApp(
+    const ProviderScope(
+      child: App()
+    )
+  );
 }
 
 Future<void> loadEnv() async {
